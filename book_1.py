@@ -74,9 +74,6 @@ class New_page:
 
         self.radionvar = tk.StringVar()
         x = book_DB.frst_chapter(self.user_name)
-        #frst_c = tk.Label(self.frame, text=x)
-        #frst_c.grid(row=4, column=1)
-        #print(x)
         self.n=5
 
         for p in x:

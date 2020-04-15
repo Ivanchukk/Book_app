@@ -29,7 +29,7 @@ class Book_Database:
         #self.cur.execute("INSERT INTO book_db VALUES (NULL, ?,?)",
          #                (user_name, chapter1))
         print(var)
-        self.cur.execute("SELECT * FROM book_db WHERE user_name=? OR chapter_title=?",(var,False))
+        self.cur.execute("SELECT * FROM book_db WHERE user_name=? OR chapter_title=?",(var,var))
         g = self.cur.fetchall()
         print(g)
         return g
