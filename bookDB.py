@@ -42,3 +42,10 @@ class Book_Database:
         g = self.cur.fetchall()
         print(user_name,new_chapter, write_chapter)
         return g
+
+    def edit_chapter_db(self, edited_content, user_name, title_name):
+        self.cur.execute("UPDATE book_db SET chapter1=? WHERE user_name=? AND chapter_title=?",
+                         (edited_content, user_name, title_name))
+        self.conn.commit()
+        g = self.cur.fetchall()
+        return g

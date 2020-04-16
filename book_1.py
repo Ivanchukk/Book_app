@@ -51,19 +51,20 @@ class New_page:
 
     def retrieve_input(self):
         inputValue = self.writer_entry.get("1.0", "end-1c")
-        x = book_DB.add_chapter_master(self.user_name, inputValue ,self.chapter_name1.get())
+        x = book_DB.add_chapter_master(self.user_name, inputValue, self.chapter_name1.get())
 
         print(self.chapter_name1.get())
 
     def go_to_first_chapter(self):
-        #book_DB.frst_chapter("ivan", "hjdsjkahdaskjhdkjasdhklasjdkalshdwjkhqwhjkvcxklbhsfidou uiaw asjk sajfhas fasdlkjf hasl wepior qoi askj dhlui weiup hksjadfn l;a fhweu gfas lh fwui fg sadjlf asif uas fglj hqw; j hkjlasf haf halsjdkfh alsjk hqwuil jf")
+        read_first_chapter = tk.Toplevel()
+        first_chapter_text = tk.Text(read_first_chapter, height=50, width=150)
+        first_chapter_text.grid(row=3, column=1, rowspan=35)
+        get_frst_c = book_DB.frst_chapter("Title 1")
+        first_chapter_text.insert(tk.INSERT, get_frst_c[0][2])
+        first_chapter_text.config(state="disabled")
 
-        get_frst_c = book_DB.frst_chapter(0)
-        frst_c = tk.Label(self.frame, text = get_frst_c)
-        frst_c.grid(row=2,column=1)
-
-        create_chapter_btn = tk.Button(self.frame,text="create next chapter", command = self.creat_new_chap)
-        create_chapter_btn.grid(row=3,column=1)
+        create_chapter_btn = tk.Button(read_first_chapter,text="create next chapter", command = self.creat_new_chap)
+        create_chapter_btn.grid(row=0,column=3)
 
 
         #print(get_frst_c)
@@ -88,22 +89,33 @@ class New_page:
 
     def print_radio(self):
         x = book_DB.frst_chapter(self.radionvar.get())
-        first_chapter_level = tk.Toplevel()
+        self.first_chapter_level = tk.Toplevel()
 
-        self.chosen_chapter = tk.Text(first_chapter_level, height=10, width=50)
-        self.chosen_chapter.grid(row=3, column=1)
+        self.chosen_title = tk.Label(self.first_chapter_level,text=self.radionvar.get(), font=("Arial", 12))
+        self.chosen_title.grid(row=1, column=1)
+
+        self.chosen_chapter = tk.Text(self.first_chapter_level, height=50, width=150)
+        self.chosen_chapter.grid(row=3, column=1,rowspan=35)
 
 
-        self.chosen_chapter.insert(tk.INSERT,x)
+        self.chosen_chapter.insert(tk.INSERT,x[0][2])
         self.chosen_chapter.config(state="disabled")
+
+        self.edit_chapter_btn = tk.Button(self.first_chapter_level, text="Edit", command=self.edit_chapter)
+        self.edit_chapter_btn.grid(row=36, column=1)
 
         mylabel = tk.Label(self.frame, text=self.radionvar.get())
         mylabel.grid(row=self.n + 2, column=1)
 
+    def edit_chapter(self):
+        self.chosen_chapter.config(state="normal")
+        btn_save = tk.Button(self.first_chapter_level, text="save", command=lambda: self.retrieve_input_edit())
+        btn_save.grid(row=4, column=1)
 
-
-
-
+    def retrieve_input_edit(self):
+        edited_chapter = self.chosen_chapter.get("1.0", "end-1c")
+        book_DB.edit_chapter_db(edited_chapter,self.user_name,  self.radionvar.get())
+        self.first_chapter_level.destroy()
 
     def all_chepters_def(self):
         return
