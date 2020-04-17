@@ -1,6 +1,6 @@
 import tkinter as tk
 from dominio.entidades import *
-#from menu.principal import *
+# from menu.principal import *
 from logindb import *
 from tkinter import ttk, messagebox, PhotoImage
 from book_1 import *
@@ -8,8 +8,11 @@ from book_1 import *
 main = tk.Tk()
 db = Database('login_db.db')
 
+
+#### Login UI with tkinter
 class MainWindow(Usuario):
     def __init__(self, root):
+        # Login window
         root.title('Login')
         root.iconbitmap('image/login.ico')
         root.geometry("300x500")
@@ -27,6 +30,7 @@ class MainWindow(Usuario):
         root.geometry('{}x{}+{}+{}'.format(width, height, x, y))
         root.deiconify()
 
+        # Log in label enetry and button UI
         self.username = tk.StringVar()
         label_user = tk.Label(root, text="Username", font=("Arial", 12)).place(x=35, y=210)
         entry_user = tk.Entry(root, width=40, textvariable=self.username).place(x=35, y=240)
@@ -39,18 +43,22 @@ class MainWindow(Usuario):
         button_register = tk.Button(root, text="Register", font=("Arial", 12), command=self.registry).place(x=210,
                                                                                                             y=350)
 
+    # check if user name and pasword correct
     def login(self):
         user_name = self.username.get()
         password = self.password.get()
-        z = db.details_check(user_name,password)
+        # look for user name and password in login data base
+        user_name_password_db_get = db.details_check(user_name, password)
+        # user name and password confarmation adn message box if incorect login details
         try:
-            if z[0][2] == user_name and z[0][3] == password:
+            if user_name_password_db_get[0][2] == user_name and user_name_password_db_get[0][3] == password:
                 New_page(user_name)
-        except (TypeError,IndexError):
+        except (TypeError, IndexError):
             messagebox.showerror(title="Wrong details", message="Wrong Password or User name")
 
-
+    # Top level window with registration form
     def registry(self):
+        # UI layout
         self.registry_win = tk.Toplevel()
         self.registry_win.title('Registry')
         self.registry_win.iconbitmap('image/register.ico')
@@ -77,8 +85,7 @@ class MainWindow(Usuario):
                                         command=self.check_if_new).place(x=210,
                                                                          y=200)
 
-
-
+    # Checking if the user name or the password in use or not if in use popup showerror messagebox
     def check_if_new(self):
         email = self.email.get()
         user_name = self.username.get()
@@ -86,35 +93,28 @@ class MainWindow(Usuario):
         if email == "" or user_name == "" or password == "":
             messagebox.showerror(title="Incomplete data", message="Fill in the data")
         else:
-            g = db.check_userName_password(email, user_name)
-        if g == []:
+            username_email_in_db = db.check_userName_password(email, user_name)
+        if username_email_in_db == []:
             db.register_sql(email, user_name, password)
             self.registry_win.destroy()
         else:
-            messagebox.showerror(title="Mail or User Name in use", message="Mail or User Name in us")
-        print(g)
+            messagebox.showerror(title="Mail or User Name in use", message="Mail or User Name in use")
 
+    #Adding user name to log in data base
     def reg_client(self):
         email = self.email.get()
         user_name = self.username.get()
         password = self.password.get()
         if email == "" or user_name == "" or password == "":
             messagebox.showerror(title="Incomplete data", message="Fill in the data")
-
             g = db.check_userName_password(email, user_name)
-            print(g)
-
             db.register_sql(email, user_name, password)
             self.registry_win.destroy()
-
 
     def new(self):
         get_entry = self.email.get()
         get_entry_data = db.search_c()
 
 
-
-
-
-window =MainWindow(main)
+window = MainWindow(main)
 main.mainloop()
