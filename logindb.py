@@ -10,15 +10,12 @@ class Database:
             "password text)")
         self.conn.commit()
 
-
-
     def register_sql(self, email, user_name, password):
         self.cur.execute("INSERT INTO login_db VALUES (NULL, ?,?,?)",
                          (email,user_name,password))
-
         self.conn.commit()
 
-    def check_userName_password(self,mail,user_name):
+    def check_user_name_password(self,mail,user_name):
         self.cur.execute("SELECT * FROM login_db WHERE email=? OR user_name=?",(mail,user_name,))
         g = self.cur.fetchall()
         return g
